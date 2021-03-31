@@ -1,0 +1,37 @@
+---
+
+- hosts: vagrantservers 
+  become: yes
+  tasks:
+    - name: Check hardware/OS
+      block:
+        - name: make sure virtualization is supported, exit play if not
+          debug:
+            msg: "virtualization not supported"
+        - meta: end_play
+      when: ansible_virtualization_type != "kvm"
+    - name: install required packages
+      dnf:
+        name:
+            - qemu-kvm
+            - libguestfs-tools
+            - virt-install
+            - rsync
+            - libvirt
+            - libvirt-devel
+            - ruby-devel
+            - gcc
+        state: latest
+    - name: start the libvirt daemon
+      service:
+          name: libvirtd
+          state: started
+          enabled: yes
+    - name: download Vagrant rpm
+      command: curl -O https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_x86_64.rpm
+    - name: install Vagrant 
+      command: rpm -U vagrant_2.2.15_x86_64.rpm      
+    - name: install vagrant's libvirtd plugin
+      command: CONFIGURE_ARGS="with-libvirt-include=/usr/include/libvirt with-libvirt-lib=/usr/lib64" vagrant plugin install vagrant-libvirt
+      
+      
