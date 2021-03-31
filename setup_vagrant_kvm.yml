@@ -31,7 +31,7 @@
       command: curl -O https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_x86_64.rpm
     - name: install Vagrant 
       command: rpm -U vagrant_2.2.15_x86_64.rpm      
-    - name: install vagrant's libvirtd plugin
-      command: CONFIGURE_ARGS="with-libvirt-include=/usr/include/libvirt with-libvirt-lib=/usr/lib64" vagrant plugin install vagrant-libvirt
+    - name: install vagrant's libvirt plugin
+      shell: CONFIGURE_ARGS="with-libvirt-include=/usr/include/libvirt with-libvirt-lib=/usr/lib64" vagrant plugin install vagrant-libvirt
       
       
